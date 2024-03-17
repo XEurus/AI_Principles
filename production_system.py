@@ -28,15 +28,14 @@ def back_recursion(dic,known,data_base):# 递归对元素进行分解 分解后�
     for j in data_base:
         for i in dic:
             if dic[i]==j:
-                data_base_copy=data_base.copy()
+                data_base_copy=data_base.copy() #浅拷贝 不能改变原有列表 以便递归回来的遍历
                 for k in i:
                     data_base_copy.append(k)
                 data_base_copy.remove(j)
                 print("字典从值寻到键",j,"-->",i)
-                #print(data_base_copy)
                 print("尝试匹配",data_base_copy,known)
                 if all( m in known for m in data_base_copy):
-                    print("匹配成功")
+                    #print("匹配成功")
                     return 1
                 else:
                     result=back_recursion(dic, known, data_base_copy)
