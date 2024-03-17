@@ -1,9 +1,17 @@
 def judge(knowledge,dic,dic_flag):
+    """
+    :param knowledge: 通过推理后的条件
+    :param dic: 输入的字典，键为前件，值为后件
+    :param dic_flag: 判断这个键值对是否被细分过的标志量
+    :return: knowledge 最后一位为结果
+    """
     while True:
         flag=0
-        for k in dic:
-            if dic_flag[k]==0 and dic[k] not in knowledge and all(i in knowledge for i in k) : #未被检测+不在已有之内+被包含
-                knowledge.append(dic[k])
+        for k in dic: #遍历字典的键
+            if dic_flag[k]==0 \
+                    and dic[k] not in knowledge \
+                    and all(i in knowledge for i in k) : #未被检测+不在已有之内+被包含
+                knowledge.append(dic[k]) #通过细分增加条件
                 print(k,"-->",dic[k],knowledge)
                 dic_flag[k]=1
                 flag=1
@@ -11,9 +19,14 @@ def judge(knowledge,dic,dic_flag):
             return knowledge
 
 def back_recursion(dic,known,data_base):# 递归对元素进行分解 分解后判断
+    """
+    :param dic: 输入的字典，键为前件，值为后件
+    :param known: 已知的数据/条件
+    :param data_base: 通过假设推理出来的条件
+    :return: 1 匹配成功
+    """
     for j in data_base:
         for i in dic:
-
             if dic[i]==j:
                 data_base_copy=data_base.copy()
                 for k in i:
@@ -46,23 +59,26 @@ if __name__ == '__main__':
         value = item[-1]  # 将最后一位作为值
         r_dict[key] = value
         r_flag[key] = 0
-    #print(r_dict,r_flag)
-    #print(len(r), len(r_flag))
-
     #反向推理数据初始化
     end_body=[22,23,24,25,29,30,14]
 
     #正向推理
     k=[17,20,19,2,9]
     knowledge=judge(k,r_dict,r_flag)
-    print(knowledge)
+    if knowledge[-1] in end_body:
+        print("结果是",knowledge[-1])
+    else:
+        print("无结果")
 
-    k = [17, 20, 19, 2, 9]
+    #反向推理
+    k = [17, 20, 19,9,2]
     for q in end_body:
         print("")
         print("假设是",q)
         result=back_recursion(r_dict,k,[q])
         if result:
-            print("结果是",q)
             break
-
+    if result:
+        print("结果是",q)
+    else:
+        print("无结果")
