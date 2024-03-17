@@ -30,32 +30,6 @@ def back_recursion(dic,known,data_base):# 递归对元素进行分解 分解后�
                     if result:
                         return result
 
-"""
-def back(knowledge,result,end_body):
-    print("反向推理")
-    tmp=[]
-    for i in end_body:
-        print("提出假设",i)
-        tmp=[i]
-
-        div_flag=1
-        while div_flag == 1:
-            div_flag=0
-            for k in list(tmp):
-                print(tmp)
-                if not all(j in knowledge for j in tmp): # 如果已知未能包含全部已有的假设项
-                    print("假设不成立，尝试获取假设的细分")
-                    if k in result: # 进一步细分假设项
-                        for l in result[k]:
-                            tmp.append(l) #增加k的细分，删除k
-                        tmp.remove(k)
-                        div_flag=1
-                        #k=0
-                    else:print("%d无法细分",k)
-                else:
-                    print("假设成立",i)
-"""
-
 if __name__ == '__main__':
     #数据初始化
     a = ["1毛发", "2奶", "3羽毛", "4会飞", "5吃肉", "6犬齿", "7有爪", "8眼盯前方", "9有蹄",
@@ -77,25 +51,13 @@ if __name__ == '__main__':
 
     #反向推理数据初始化
     end_body=[22,23,24,25,29,30,14]
-    back_dict={}
-    back_flag={}
-    for i in r:
-        key = i[-1]
-        value= tuple(i[:-1])
-        back_dict[key]=value
-        back_flag[key]=0
-    print(back_dict,back_flag)
-
-
 
     #正向推理
     k=[17,20,19,2,9]
-    #knowledge=judge(k,r_dict,r_flag)
-    #print(knowledge)
+    knowledge=judge(k,r_dict,r_flag)
+    print(knowledge)
 
     k = [17, 20, 19, 2, 9]
-    #back(k,back_dict,end_body)
-    #data_base=[22]
     for q in end_body:
         print("")
         print("假设是",q)
