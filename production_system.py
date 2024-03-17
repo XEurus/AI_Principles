@@ -10,8 +10,19 @@ def judge(knowledge,dic,dic_flag):
         if flag==0:
             return knowledge
 
-def back():
+def back(knowledge,dic,dic_flag,result):
     print("反向推理")
+    for i in result:
+        dic[i]
+
+def find_key(input_dict, value):
+    output()
+    for k, v in input_dict.items():
+        if v == value:
+            k
+    return None
+
+
 if __name__ == '__main__':
     a = ["1毛发", "2奶", "3羽毛", "4会飞", "5吃肉", "6犬齿", "7有爪", "8眼盯前方", "9有蹄",
          "10反刍动物", "11哺乳动物", "12鸟", "13善飞", "14信天翁", "15食肉动物", "16黄褐色", "17暗斑点",
@@ -21,9 +32,12 @@ if __name__ == '__main__':
          [11, 15, 16, 17, 23], [11, 15, 16, 18, 22], [21, 20, 19, 17, 24],
          [21, 18, 25], [12, 20, 26, 27, 24, 29], [12, 28, 16, 27, 30], [12, 13, 14]]
 
+
+
     r_dict = {}
     r_flag={}
     for item in r:
+
         key = tuple(item[:-1])  # 将除最后一位的部分作为键
         value = item[-1]  # 将最后一位作为值
         r_dict[key] = value
