@@ -73,9 +73,27 @@ class network():
     #     output_tensor = output_tensor.squeeze(0)  # 去掉batch维度
     #
     def pooling(self,input_img):
+        if len(input_img[0])%2==0 and len(input_img[1])%2==0: #要求偶数
+            new_img_shape = (int(len(input_img[0])/2), int(len(input_img[1])/2))
+            new_img = np.zeros(new_img_shape)
+            for i in range(0,len(input_img[0]),2): #遍历行列
+                for k in range(0,len(input_img[1]),2):
+                    mean=np.mean(input_img[i:i+2,k:k+2]) #平均池化
+                    new_img[int(i/2),int(k/2)]=mean
+        else: #舍弃边缘一条的数据
+            #print("池化层要求偶数矩阵输入")
+            input_img=input_img[1:len(input_img[0]),1:len(input_img[1])]
 
+            new_img_shape = (int(len(input_img[0]) / 2), int(len(input_img[1]) / 2))
+            new_img = np.zeros(new_img_shape)
+            for i in range(0, len(input_img[0]), 2):  # 遍历行列
+                for k in range(0, len(input_img[1]), 2):
+                    mean = np.mean(input_img[i:i + 2, k:k + 2])  # 平均池化
+                    new_img[int(i / 2), int(k / 2)] = mean
 
-    # # def input_layer_init(self,shape):
+        return new_img
+
+    def input_layer_init(self,input_matrix):
 
 
 
@@ -83,5 +101,11 @@ if __name__ == "__main__":
     net=network()
     a=net.relu(-1)
     print(a)
-    net.convolution_np(net.train_img[0])
+    cov_img=net.convolution_np(net.train_img[0])
+    pool_img=net.pooling(cov_img)
+    cov_img2=net.convolution_np(pool_img)
+    pool_img2=net.pooling(cov_img2)
+    print("finish con")
+
+
     #net.get_data()
