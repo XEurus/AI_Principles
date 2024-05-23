@@ -15,6 +15,12 @@ class network():
     def __init__(self):
         print("init")
         self.test_img,self.test_labels,self.train_img,self.train_labels=self.get_data()
+        self.img_shape=np.zeros(20)
+        self.fully_connection_layer1=None
+        self.bias=None
+        self.epoch=100
+        self.batchsize=64
+        self.cls=10
         print("init_down")
 
     def get_data(self):
@@ -22,6 +28,12 @@ class network():
         test_labels=recode.parse_mnist("./MNIST/t10k-labels-idx1-ubyte.gz")
         train_img=recode.parse_mnist("./MNIST/train-images-idx3-ubyte.gz")
         train_labels=recode.parse_mnist("./MNIST/train-labels-idx1-ubyte.gz")
+
+        shuffled_indices = np.random.permutation(len(test_labels))
+        # 按照相同的顺序打乱两个数组
+        train_img = train_img[shuffled_indices]
+        train_labels = train_labels[shuffled_indices]
+
         return test_img,test_labels,train_img,train_labels
 
     def relu(self,a):
@@ -92,20 +104,112 @@ class network():
                     new_img[int(i / 2), int(k / 2)] = mean
 
         return new_img
+    def create_weights(self,this_layer,next_layer):
+        row=len(this_layer) #前一个输入提供行，后一个输出提供列
+        """
+                 [1,2  
+        [1,2,3] @ 3,4  = [x1,x2]
+                  5,6]
+        """
+        col=len(next_layer)
+        return np.random.rand(row,col)
 
-    def input_layer_init(self,input_matrix):
+    def create_bias(self,shape):
+        return np.random.randint(low=1,high=100,size=(shape))
 
+    def fully_connection(self,input_matrix,input_weight,input_bias):
+        output_matrix=np.dot(input_matrix,input_weight)+input_bias
+        for i in range(len(output_matrix)):
+            output_matrix[i]=self.relu(output_matrix[i])# 激活函数
+
+        return output_matrix
+
+    def softmax(self,input_matrix):
+        max_ = np.max(input_matrix) #防止溢出
+        softmax_out = np.exp(input_matrix-max_) / np.sum(np.exp(input_matrix-max_))
+        for i in range(len(softmax_out)):
+            if softmax_out[i]<1e-15:
+                softmax_out[i]=1e-15
+        return softmax_out
+
+    def loss(self,vec1,vec2): #配合softmax使用交叉熵 vec1 vec2模型预测
+        loss_=-np.sum(vec1*np.log(vec2))
+        return loss_
+
+    def one_hot(self,lable):
+        lable_matrix=np.zeros(self.cls)
+        lable_matrix[lable]=1
+        return lable_matrix
+
+    #def loss2softmax(self,y,   .):
+
+    #def bp_w1(self,w
+
+    def softmax_devide(self,o_matrix,index):
+        sum_exp=np.sum(np.exp(o_matrix))
+        Denominator=sum_exp*sum_exp
+        exp_o_index=np.exp(o_matrix[index])
+        numerator=exp_o_index*sum_exp-exp_o_index*exp_o_index
+
+        return numerator/Denominator
+
+    def caculate_divide(self,weight):
 
 
 if __name__ == "__main__":
     net=network()
-    a=net.relu(-1)
-    print(a)
+
+    index=0
+
+    lable=net.train_labels[0]
+    lable=net.one_hot(lable)
+
     cov_img=net.convolution_np(net.train_img[0])
     pool_img=net.pooling(cov_img)
     cov_img2=net.convolution_np(pool_img)
     pool_img2=net.pooling(cov_img2)
-    print("finish con")
+
+    input_array = pool_img2.reshape(-1) #拉长变成行向量
+
+    hiden_layer = np.zeros(len(input_array))
+    weight1=net.create_weights(input_array,hiden_layer)
+    bias1=net.create_bias(len(input_array))
+
+    output_layer=np.zeros(10)
+    weight_hiden_output=net.create_weights(hiden_layer,output_layer)
+    bias_hiden_output=net.create_bias(len(output_layer))
+
+    hiden_layer=net.fully_connection(input_array,weight1,bias1)
+    output_layer=net.fully_connection(hiden_layer,weight_hiden_output,bias_hiden_output)
+    softmax_out=net.softmax(output_layer)
+    loss1=net.loss(lable,softmax_out)
+
+    weight_list=[weight1,weight_hiden_output]
+    for i in range()
+
+
+    for i in range(net.epoch):
+        for k in range(net.batchsize):
+            print("end")
 
 
     #net.get_data()
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

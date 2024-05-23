@@ -18,6 +18,8 @@ def parse_mnist(minst_file_addr: str = None, flatten: bool = False, one_hot: boo
     返回值:
         解析后的numpy数组
     """
+    # 生成随机的打乱顺序
+
     if minst_file_addr is not None:
         minst_file_name = os.path.basename(minst_file_addr)  # 根据地址获取MNIST文件名字
         with gzip.open(filename=minst_file_addr, mode="rb") as minst_file:
